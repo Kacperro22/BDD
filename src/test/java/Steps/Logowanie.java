@@ -1,5 +1,8 @@
 package Steps;
 
+import io.cucumber.java.AfterAll;
+import io.cucumber.java.BeforeAll;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -9,8 +12,12 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 public class Logowanie {
-    WebDriver driver =  new ChromeDriver(); //konstruktor wywolujacy przegladarke
+    static WebDriver driver;
 
+    @BeforeAll
+    public static void setDriver(){
+        driver =  new ChromeDriver(); //konstruktor wywolujacy przegladarke
+    }
     @Given("Uzytkownik otwiera przegladarke")
     public void uzytkownik_otwiera_przegladarke() {
         System.out.println("Krok 1 Uzytkownik otwiera przegladarke");
@@ -45,7 +52,52 @@ public class Logowanie {
     public void uzytkownik_zostaje_poprawnei_zalogowany_do_aplikacji() {
         System.out.println("Krok 6 Uzytkownik zostaje poprawnei zalogowany do aplikacji");
         Assert.assertEquals("https://the-internet.herokuapp.com/secure",driver.getCurrentUrl());
-        driver.close();
+
     }
 
+
+    @When("Uzytkownik wpisuje niepoprawne haslo")
+    public void uzytkownik_wpisuje_niepoprawne_haslo() {
+        driver.findElement(By.name("password")).sendKeys("xyz!");
+    }
+
+    @Then("Uzytkownik nie zostaje poprawnie zalogowany do aplikacji")
+    public void uzytkownik_nie_zostaje_poprawnie_zalogowany_do_aplikacji() {
+        Assert.assertEquals("https://the-internet.herokuapp.com/login",driver.getCurrentUrl());
+
+    }
+
+    // and Uzytkownik wpisuje adres strony internetowej https://the-internet.herokuapp.com/login
+    @Given("Uzytkownik wpisuje adres strony internetowej {string}")
+    public void uzytkownik_wpisuje_adres_strony_internetowej(String adresStrony) {
+        // adresStrony https://the-internet.herokuapp.com/login
+        driver.navigate().to(adresStrony);
+
+    }
+    @When("Uzytkownik wpisuje poprawny login {string}")
+    public void uzytkownik_wpisuje_poprawny_login(String userNane) {
+        driver.findElement(By.id("username")).sendKeys(userNane);
+    }
+    @When("Uzytkownik wpisuje poprawen haslo {string}")
+    public void uzytkownik_wpisuje_poprawen_haslo(String password) {
+        driver.findElement(By.name("password")).sendKeys(password);
+    }
+
+    @When("^Uzytkownik wpisuje poprawny loginek (.+)$")
+    public void uzytkownik_wpisuje_poprawny_login2(String loginek) throws Throwable {
+        driver.findElement(By.id("username")).sendKeys(loginek);
+    }
+
+    @And("^Uzytkownik wpisuje poprawen haselko (.+)$")
+    public void uzytkownik_wpisuje_poprawen_haslo2(String haselko) throws Throwable {
+        driver.findElement(By.name("password")).sendKeys(haselko);
+    }
+
+        @AfterAll
+    public static void tear(){
+        driver.close();
+    }
 }
+
+
+

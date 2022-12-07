@@ -9,6 +9,7 @@ import io.cucumber.java.en.When;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 public class Logowanie {
@@ -33,7 +34,10 @@ public class Logowanie {
     @When("Uzytkownik wpisuje poprawny login")
     public void uzytkownik_wpisuje_poprawny_login() {
         System.out.println("Krok 3 Uzytkownik wpisuje poprawny login");
-        driver.findElement(By.id("username")).sendKeys("tomsmith");
+        //driver.findElement(By.id("username")).sendKeys("tomsmith")
+        WebElement usernameInput = driver.findElement(By.id("username"));
+        usernameInput.clear();
+        usernameInput.sendKeys("tomsmith");
     }
 
     @When("Uzytkownik wpisuje poprawen haslo")
@@ -45,7 +49,11 @@ public class Logowanie {
     @When("Uzytkonik klika przycisk login")
     public void uzytkonik_klika_przycisk_login() {
         System.out.println("Krok 5 Uzytkonik klika przycisk login");
-        driver.findElement(By.tagName("button")).click();
+        WebElement loginButton = driver.findElement(By.tagName("button"));
+        String textButton = loginButton.getText();
+        System.out.println("PRZYCISK ZAWIERA TEKST: "  + textButton);
+        loginButton.click();
+        //driver.findElement(By.tagName("button")).click();
     }
 
     @Then("Uzytkownik zostaje poprawnei zalogowany do aplikacji")
